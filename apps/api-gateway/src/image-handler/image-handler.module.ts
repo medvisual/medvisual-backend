@@ -1,5 +1,4 @@
 import { Module } from "@nestjs/common";
-import { ImageHandlerController } from "./image-handler.controller";
 import { ImageHandlerService } from "./image-handler.service";
 import { ClientsModule, Transport } from "@nestjs/microservices";
 
@@ -13,7 +12,6 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
             }
         ])
     ],
-    controllers: [ImageHandlerController],
     providers: [ImageHandlerService],
     exports: [ImageHandlerService]
 })

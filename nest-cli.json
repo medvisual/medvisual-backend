@@ -1,22 +1,22 @@
 {
     "$schema": "https://json.schemastore.org/nest-cli",
     "collection": "@nestjs/schematics",
-    "sourceRoot": "apps/medvisual-api-gateway/src",
+    "sourceRoot": "apps/api-gateway/src",
     "compilerOptions": {
         "deleteOutDir": true,
         "webpack": true,
         "tsConfigPath": "tsconfig.json"
     },
     "monorepo": true,
-    "root": "apps/medvisual-api-gateway",
+    "root": "apps/api-gateway",
     "projects": {
-        "medvisual-api-gateway": {
+        "api-gateway": {
             "type": "application",
-            "root": "apps/medvisual-api-gateway",
+            "root": "apps/api-gateway",
             "entryFile": "main",
-            "sourceRoot": "apps/medvisual-api-gateway/src",
+            "sourceRoot": "apps/api-gateway/src",
             "compilerOptions": {
-                "tsConfigPath": "apps/medvisual-api-gateway/tsconfig.app.json"
+                "tsConfigPath": "apps/api-gateway/tsconfig.app.json"
             }
         },
         "image-handler": {

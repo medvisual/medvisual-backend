@@ -3,7 +3,7 @@ import { ImageHandlerService } from "./image-handler/image-handler.service";
 import { UploadImageDto } from "apps/image-handler/src/dto/upload-image.dto";
 
 @Injectable()
-export class MedvisualApiGatewayService {
+export class ApiGatewayService {
     constructor(private imageHandlerService: ImageHandlerService) {}
 
     forwardImageToHandler(uploadImageDto: UploadImageDto) {

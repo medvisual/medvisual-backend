@@ -1,5 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
+import { consola } from "consola";
+
 import { UploadImageDto } from "apps/image-handler/src/dto/upload-image.dto";
 
 @Injectable()
@@ -9,7 +11,7 @@ export class ImageHandlerService {
     ) {}
 
     processImage(uploadImageDto: UploadImageDto) {
-        console.log(uploadImageDto);
+        consola.debug(uploadImageDto);
 
         return this.imageHandlerClient.send(
             "image-handler.processImage",

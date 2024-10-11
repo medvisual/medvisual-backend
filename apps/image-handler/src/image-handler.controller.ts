@@ -1,9 +1,9 @@
 import { MessagePattern } from "@nestjs/microservices";
-import * as common from "@nestjs/common";
+import { Controller } from "@nestjs/common";
 import { ImageHandlerService } from "./image-handler.service";
 import { UploadImageDto } from "./dto/upload-image.dto";
 
-@common.Controller()
+@Controller()
 export class ImageHandlerController {
     constructor(private readonly imageHandlerService: ImageHandlerService) {}
 
