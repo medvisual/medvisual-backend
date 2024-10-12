@@ -1,12 +1,18 @@
 import { Injectable } from "@nestjs/common";
 import { ImageHandlerService } from "./image-handler/image-handler.service";
-import { UploadImageDto } from "apps/image-handler/src/dto/upload-image.dto";
+import { DiseaseInfoDto } from "apps/image-handler/src/dto/disease-info.dto";
+import { consola } from "consola";
 
 @Injectable()
 export class ApiGatewayService {
     constructor(private imageHandlerService: ImageHandlerService) {}
 
-    forwardImageToHandler(uploadImageDto: UploadImageDto) {
-        return this.imageHandlerService.processImage(uploadImageDto);
+    forwardImageToHandler(
+        image: Express.Multer.File,
+        diseaseInfoDto: DiseaseInfoDto
+    ) {
+        consola.info(diseaseInfoDto, diseaseInfoDto.diseaseCategory);
+
+        return this.imageHandlerService.processImage(image, diseaseInfoDto);
     }
 }

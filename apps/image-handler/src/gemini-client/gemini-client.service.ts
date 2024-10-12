@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { GoogleAIFileManager } from "@google/generative-ai/server";
 import { consola } from "consola";
+import { ImageUploadDto } from "../dto/image-upload.dto";
 
 @Injectable()
 export class GeminiClientService {
@@ -21,16 +22,17 @@ export class GeminiClientService {
         "BASE_DISEASE_IMAGE_PROMPT"
     );
 
-    async makeRequest(diseaseCategory: string) {
-        const prompt: string = this.baseDiseaseImagePrompt + diseaseCategory;
+    async getDiseaseInfoFromImage(imageUploadDto: ImageUploadDto) {
+        const prompt: string =
+            this.baseDiseaseImagePrompt + imageUploadDto.data.diseaseCategory;
 
         try {
             // Test values
             const uploadResult = await this.fileManager.uploadFile(
-                `D:/medvisual-backend/reqs/testxray.jpg`,
+                imageUploadDto.image.path,
                 {
                     mimeType: "image/jpeg",
-                    displayName: "x-ray image"
+                    displayName: "image"
                 }
             );
             consola.success(`Uploaded file ${uploadResult.file.displayName}`);

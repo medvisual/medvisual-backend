@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { consola } from "consola";
 
-import { UploadImageDto } from "apps/image-handler/src/dto/upload-image.dto";
+import { DiseaseInfoDto } from "apps/image-handler/src/dto/disease-info.dto";
 
 @Injectable()
 export class ImageHandlerService {
@@ -10,12 +10,12 @@ export class ImageHandlerService {
         @Inject("IMAGE_HANDLER_CLIENT") private imageHandlerClient: ClientProxy
     ) {}
 
-    processImage(uploadImageDto: UploadImageDto) {
-        consola.debug(uploadImageDto);
+    processImage(image: Express.Multer.File, diseaseInfoDto: DiseaseInfoDto) {
+        consola.info(diseaseInfoDto, diseaseInfoDto.diseaseCategory);
 
-        return this.imageHandlerClient.send(
-            "image-handler.processImage",
-            uploadImageDto
-        );
+        return this.imageHandlerClient.send("image-handler.processImage", {
+            image,
+            data: diseaseInfoDto
+        });
     }
 }

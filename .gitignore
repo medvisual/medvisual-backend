@@ -4,7 +4,8 @@
 /build
 
 # Misc
-reqs
+/reqs
+/tmp
 
 # Logs
 logs

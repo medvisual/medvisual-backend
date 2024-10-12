@@ -8,7 +8,7 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
             {
                 name: "IMAGE_HANDLER_CLIENT",
                 transport: Transport.TCP,
-                options: { port: 3017 }
+                options: { port: 3001 }
             }
         ])
     ],

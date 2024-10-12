@@ -1,6 +1,6 @@
 import { IsString } from "class-validator";
 
-export class UploadImageDto {
+export class DiseaseInfoDto {
     @IsString()
     readonly diseaseCategory: string;
 }
