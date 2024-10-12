@@ -31,7 +31,7 @@ export class GeminiClientService {
             const uploadResult = await this.fileManager.uploadFile(
                 imageUploadDto.image.path,
                 {
-                    mimeType: "image/jpeg",
+                    mimeType: imageUploadDto.image.mimetype,
                     displayName: "image"
                 }
             );
