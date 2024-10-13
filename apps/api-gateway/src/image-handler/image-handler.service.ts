@@ -4,8 +4,8 @@ import { consola } from "consola";
 
 import { DiseaseInfoDto } from "./dto/disease-info.dto";
 import { IMAGE_HANDLER_CLIENT } from "./constants";
-import { IMAGE_HANDLER_PATTERNS } from "@medvisual/contracts";
-import { ImageUploadDto as ClientImageUploadDto } from "@medvisual/contracts";
+import { IMAGE_HANDLER_PATTERNS } from "@medvisual/contracts/image-handler";
+import { ImageUploadDto as ClientImageUploadDto } from "@medvisual/contracts/image-handler";
 
 @Injectable()
 export class ImageHandlerService {

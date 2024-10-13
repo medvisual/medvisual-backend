@@ -3,8 +3,8 @@ import { Controller } from "@nestjs/common";
 import { consola } from "consola";
 
 import { ImageHandlerService } from "./image-handler.service";
-import { ImageUploadDto } from "@medvisual/contracts";
-import { IMAGE_HANDLER_PATTERNS } from "@medvisual/contracts";
+import { ImageUploadDto } from "@medvisual/contracts/image-handler";
+import { IMAGE_HANDLER_PATTERNS } from "@medvisual/contracts/image-handler";
 
 @Controller()
 export class ImageHandlerController {

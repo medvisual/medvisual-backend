@@ -4,7 +4,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { GoogleAIFileManager } from "@google/generative-ai/server";
 import { consola } from "consola";
 
-import { ImageUploadDto } from "@medvisual/contracts";
+import { ImageUploadDto } from "@medvisual/contracts/image-handler";
 
 @Injectable()
 export class GeminiClientService {
