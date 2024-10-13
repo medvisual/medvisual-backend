@@ -5,6 +5,7 @@ import { GoogleAIFileManager } from "@google/generative-ai/server";
 import { consola } from "consola";
 
 import { ImageUploadDto } from "@medvisual/contracts/image-handler";
+import { GeminiVerdictDto } from "@medvisual/contracts/image-handler/dto/gemini-verdict.dto";
 
 @Injectable()
 export class GeminiClientService {
@@ -23,7 +24,9 @@ export class GeminiClientService {
         "BASE_DISEASE_IMAGE_PROMPT"
     );
 
-    async getDiseaseInfoFromImage(imageUploadDto: ImageUploadDto) {
+    async getDiseaseInfoFromImage(
+        imageUploadDto: ImageUploadDto
+    ): Promise<GeminiVerdictDto> {
         const prompt: string =
             this.baseDiseaseImagePrompt + imageUploadDto.data.diseaseCategory;
 
@@ -47,7 +50,7 @@ export class GeminiClientService {
                 }
             ]);
             consola.info(result.response.text());
-            return result.response.text();
+            return JSON.parse(result.response.text());
         } catch (error) {
             consola.error(error);
         }
