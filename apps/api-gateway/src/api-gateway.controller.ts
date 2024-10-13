@@ -5,10 +5,11 @@ import {
     UploadedFile,
     UseInterceptors
 } from "@nestjs/common";
-import { ApiGatewayService } from "./api-gateway.service";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { DiseaseInfoDto } from "apps/image-handler/src/dto/disease-info.dto";
 import { Express } from "express";
+
+import { ApiGatewayService } from "./api-gateway.service";
+import { DiseaseInfoDto } from "./image-handler/dto/disease-info.dto";
 
 @Controller("/api")
 export class ApiGatewayController {

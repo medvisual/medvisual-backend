@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
+
 import { ImageHandlerService } from "./image-handler/image-handler.service";
-import { DiseaseInfoDto } from "apps/image-handler/src/dto/disease-info.dto";
-import { consola } from "consola";
+import { DiseaseInfoDto } from "./image-handler/dto/disease-info.dto";
 
 @Injectable()
 export class ApiGatewayService {
@@ -11,8 +11,6 @@ export class ApiGatewayService {
         image: Express.Multer.File,
         diseaseInfoDto: DiseaseInfoDto
     ) {
-        consola.info(diseaseInfoDto, diseaseInfoDto.diseaseCategory);
-
         return this.imageHandlerService.processImage(image, diseaseInfoDto);
     }
 }

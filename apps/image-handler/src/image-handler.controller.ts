@@ -1,14 +1,16 @@
 import { MessagePattern } from "@nestjs/microservices";
 import { Controller } from "@nestjs/common";
-import { ImageHandlerService } from "./image-handler.service";
-import { ImageUploadDto } from "./dto/image-upload.dto";
 import { consola } from "consola";
+
+import { ImageHandlerService } from "./image-handler.service";
+import { ImageUploadDto } from "@medvisual/contracts";
+import { IMAGE_HANDLER_PATTERNS } from "@medvisual/contracts";
 
 @Controller()
 export class ImageHandlerController {
     constructor(private readonly imageHandlerService: ImageHandlerService) {}
 
-    @MessagePattern("image-handler.processImage")
+    @MessagePattern(IMAGE_HANDLER_PATTERNS.PROCESS_IMAGE)
     processImage(imageUploadDto: ImageUploadDto) {
         consola.info(imageUploadDto);
 

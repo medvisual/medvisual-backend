@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
-import { GeminiClientService } from "./gemini-client.service";
 import { ConfigModule } from "@nestjs/config";
+
+import { GeminiClientService } from "./gemini-client.service";
 
 @Module({
     imports: [ConfigModule],

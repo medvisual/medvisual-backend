@@ -3,7 +3,8 @@ import { ConfigService } from "@nestjs/config";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { GoogleAIFileManager } from "@google/generative-ai/server";
 import { consola } from "consola";
-import { ImageUploadDto } from "../dto/image-upload.dto";
+
+import { ImageUploadDto } from "@medvisual/contracts";
 
 @Injectable()
 export class GeminiClientService {
@@ -27,7 +28,6 @@ export class GeminiClientService {
             this.baseDiseaseImagePrompt + imageUploadDto.data.diseaseCategory;
 
         try {
-            // Test values
             const uploadResult = await this.fileManager.uploadFile(
                 imageUploadDto.image.path,
                 {

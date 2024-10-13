@@ -1,0 +1,1 @@
+export const IMAGE_HANDLER_CLIENT = Symbol("IMAGE_HANDLER_CLIENT");

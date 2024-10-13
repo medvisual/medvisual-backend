@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
+
 import { GeminiClientService } from "./gemini-client/gemini-client.service";
-import { ImageUploadDto } from "./dto/image-upload.dto";
+import { ImageUploadDto } from "@medvisual/contracts";
 
 @Injectable()
 export class ImageHandlerService {
