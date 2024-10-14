@@ -6,6 +6,7 @@ import { consola } from "consola";
 
 import { ImageUploadDto } from "@medvisual/contracts/image-handler";
 import { GeminiVerdictDto } from "@medvisual/contracts/image-handler/dto/gemini-verdict.dto";
+import { diseaseImageSchema } from "./schemas/gemini-client.schemas";
 
 @Injectable()
 export class GeminiClientService {
@@ -15,7 +16,11 @@ export class GeminiClientService {
         this.configService.get<string>("GEMINI_API_KEY")
     );
     private readonly model = this.ai.getGenerativeModel({
-        model: this.configService.get<string>("GEMINI_MODEL")
+        model: this.configService.get<string>("GEMINI_MODEL"),
+        generationConfig: {
+            responseMimeType: "application/json",
+            responseSchema: diseaseImageSchema
+        }
     });
     private readonly fileManager = new GoogleAIFileManager(
         this.configService.get<string>("GEMINI_API_KEY")
@@ -52,6 +57,7 @@ export class GeminiClientService {
             consola.info(result.response.text());
             return JSON.parse(result.response.text());
         } catch (error) {
+            // TODO: Implement exception filter instead
             consola.error(error);
         }
     }

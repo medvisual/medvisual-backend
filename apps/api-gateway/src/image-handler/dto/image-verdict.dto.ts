@@ -1,8 +1,9 @@
+import { Exclude } from "class-transformer";
 import { IsNumber, IsString } from "class-validator";
 
-export class GeminiVerdictDto {
+export class ImageVerdictDto {
     /**
-     * Title of a disease (disease category) passed to Gemini
+     * Title of a disease (disease category) passed to AI
      */
     @IsString()
     disease: string;
@@ -14,14 +15,14 @@ export class GeminiVerdictDto {
     verdict: string;
 
     /**
-     * Probability that the disease assumption was right as a number in range from 0 to 1
+     * Probability that the assumption was right as a number in range from 0 to 1
      */
     @IsNumber()
     probability: number;
 
     /**
-     * Advice to consult a qualified professional
+     * Advice to consult a qualified professional (not used)
      */
-    @IsString()
+    @Exclude()
     advice: string;
 }
