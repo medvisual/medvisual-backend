@@ -1,0 +1,27 @@
+services:
+  api-gateway:
+    build:
+      context: .
+      dockerfile: ./apps/api-gateway/Dockerfile
+      target: development
+    command: npm run start:dev api-gateway
+    depends_on:
+      - image-handler
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+  image-handler:
+    build:
+      context: .
+      dockerfile: ./apps/image-handler/Dockerfile
+      target: development
+    command: npm run start:dev image-handler
+    env_file:
+      - ./apps/image-handler/.env
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3001:3001"

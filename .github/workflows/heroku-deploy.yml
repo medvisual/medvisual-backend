@@ -1,0 +1,69 @@
+name: Deploy every changed service to Heroku
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-for-changes:
+    name: Check for changes in each service
+    runs-on: ubuntu-latest
+    outputs:
+      api_gateway_changed: ${{ steps.api_gateway.outputs.service }}
+      image_handler_changed: ${{ steps.image_handler.outputs.service }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for changes in `api-gateway`
+        id: api_gateway
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            service:
+              - 'apps/api-gateway/**'
+
+      - name: Check for changes in `image-handler`
+        id: image_handler
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            service:
+              - 'apps/image-handler/**'
+
+  deploy-api-gateway:
+    name: Deploy `api-gateway` if changed
+    runs-on: ubuntu-latest
+    needs: check-for-changes
+    if: needs.check-for-changes.outputs.api_gateway_changed == 'true'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.13.15
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          heroku_app_name: "medvisual-api-gateway"
+          appdir: "apps/api-gateway"
+  deploy-image-handler:
+    name: Deploy `image-handler` if changed
+    runs-on: ubuntu-latest
+    needs: check-for-changes
+    if: needs.check-for-changes.outputs.image_handler_changed == 'true'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.13.15
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          heroku_app_name: "medvisual-image-handler"
+          appdir: "apps/image-handler"

@@ -10,7 +10,7 @@ import { IMAGE_HANDLER_PATTERNS } from "@medvisual/contracts/image-handler";
 export class ImageHandlerController {
     constructor(private readonly imageHandlerService: ImageHandlerService) {}
 
-    // As for now, valdation is needed only at the very output (ResponseValidationInterceptor in api-gateway)
+    // As for now, response valdation is needed only at the very output (ResponseValidationInterceptor in api-gateway)
     @MessagePattern(IMAGE_HANDLER_PATTERNS.PROCESS_IMAGE)
     processImage(imageUploadDto: ImageUploadDto) {
         consola.info(imageUploadDto);
