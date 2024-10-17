@@ -8,7 +8,7 @@
   "scripts": {
     "start": "nest start",
     "start:dev": "nest start --watch",
-    "start:prod": "node main",
+    "start:prod": "node dist/src/main",
     "build": "nest build"
   },
   "dependencies": {
