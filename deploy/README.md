@@ -1,0 +1,3 @@
+# Note
+
+This folder contains tsconfig.json files that are meant to be deployed with the corresponding microservices (libs folder is copied directly in the deployed folder, so the path in tsconfig should be different), which prevents the IDE from using them (config files in the project root are used in the development process). I'm not sure whether or not there's a better approach to CD in this monorepo setup.

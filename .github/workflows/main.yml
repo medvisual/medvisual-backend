@@ -34,7 +34,7 @@ jobs:
               - 'apps/image-handler/**'
 
   deploy-api-gateway:
-    name: Deploy api-gateway if changed
+    name: api-gateway -> CI/CD (if changed)
     runs-on: ubuntu-latest
     needs: check-for-changes
     if: needs.check-for-changes.outputs.api_gateway_changed == 'true'
@@ -44,9 +44,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Libs folder won't be deployed otherwise
-      - name: Copy libs folder
-        run: cp -r libs apps/api-gateway/libs
+      # Copy libs folder and corresponding configs so that they are included in the deployment
+      - name: Bundle
+        run: |
+            cp -r libs apps/api-gateway/libs
+            cp deploy/api-gateway/configs/* apps/api-gateway
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -71,7 +73,7 @@ jobs:
           heroku_app_name: "medvisual-api-gateway"
           appdir: "apps/api-gateway"
   deploy-image-handler:
-    name: Deploy image-handler if changed
+    name: image-handler -> CI/CD (if changed)
     runs-on: ubuntu-latest
     needs: check-for-changes
     if: needs.check-for-changes.outputs.image_handler_changed == 'true'
@@ -80,8 +82,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Copy libs folder
-        run: cp -r libs apps/image-handler/libs
+      # Copy libs folder and corresponding configs so that they are included in the deployment
+      - name: Bundle
+        run: |
+            cp -r libs apps/image-handler/libs
+            cp deploy/image-handler/configs/* apps/image-handler
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

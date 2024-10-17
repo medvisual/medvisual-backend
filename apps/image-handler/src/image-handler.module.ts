@@ -9,10 +9,17 @@ import { GeminiClientModule } from "./gemini-client/gemini-client.module";
 @Module({
     imports: [
         ConfigModule.forRoot({
+            ignoreEnvFile: process.env.NODE_ENV === "production",
+            envFilePath: "apps/image-handler/.env",
             validationSchema: Joi.object({
+                NODE_ENV: Joi.string()
+                    .valid("development", "production")
+                    .default("development"),
+                HOST: Joi.string().hostname().default("0.0.0.0"),
+                PORT: Joi.number().port().default(3001),
                 GEMINI_API_KEY: Joi.string().required(),
                 GEMINI_MODEL: Joi.string().required(),
-                BASE_IMAGE_PROMPT: Joi.string()
+                BASE_DISEASE_IMAGE_PROMPT: Joi.string().required()
             }),
             validationOptions: {
                 allowUnknown: true,

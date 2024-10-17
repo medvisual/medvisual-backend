@@ -10,7 +10,7 @@ import { Express } from "express";
 
 import { ApiGatewayService } from "./api-gateway.service";
 import { DiseaseInfoDto } from "./image-handler/dto/disease-info.dto";
-import { ResponseValidationInterceptor } from "./utils/interceptors/response-validation.interceptor";
+import { ResponseValidationInterceptor } from "./interceptors/response-validation.interceptor";
 import { ImageVerdictDto } from "./image-handler/dto/image-verdict.dto";
 
 @Controller("/api")

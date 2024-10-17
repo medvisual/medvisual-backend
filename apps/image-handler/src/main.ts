@@ -5,13 +5,16 @@ import { ValidationPipe } from "@nestjs/common";
 import { ImageHandlerModule } from "./image-handler.module";
 
 async function bootstrap() {
+    const host = process.env.HOST;
+    const port = parseInt(process.env.PORT, 10);
+
     const app = await NestFactory.createMicroservice<MicroserviceOptions>(
         ImageHandlerModule,
         {
             transport: Transport.TCP,
             options: {
-                host: "0.0.0.0",
-                port: 3001
+                host: host,
+                port: port
             }
         }
     );
