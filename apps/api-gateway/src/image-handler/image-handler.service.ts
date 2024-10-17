@@ -17,6 +17,10 @@ export class ImageHandlerService {
         private readonly imageHandlerClient: ClientProxy
     ) {}
 
+    async onApplicationBootstrap() {
+        await this.imageHandlerClient.connect();
+    }
+
     processImage(image: Express.Multer.File, diseaseInfoDto: DiseaseInfoDto) {
         consola.info(diseaseInfoDto, diseaseInfoDto.diseaseCategory);
 

@@ -5,18 +5,20 @@ import { ValidationPipe } from "@nestjs/common";
 import { ImageHandlerModule } from "./image-handler.module";
 
 async function bootstrap() {
-    const host = process.env.HOST;
-    const port = parseInt(process.env.PORT, 10);
+    const microserviceOptions: MicroserviceOptions = {
+        transport: Transport.TCP,
+        options: {
+            port: parseInt(process.env.PORT, 10)
+        }
+    };
+    const isDevelopment: boolean = process.env.NODE_ENV === "development";
+    if (isDevelopment) {
+        microserviceOptions.options.host = process.env.HOST;
+    }
 
     const app = await NestFactory.createMicroservice<MicroserviceOptions>(
         ImageHandlerModule,
-        {
-            transport: Transport.TCP,
-            options: {
-                host: host,
-                port: port
-            }
-        }
+        microserviceOptions
     );
     app.useGlobalPipes(
         new ValidationPipe({
@@ -25,6 +27,11 @@ async function bootstrap() {
     );
 
     await app.listen();
+    console.log(
+        `Microservice is running on ` +
+            `${microserviceOptions.options.host || "localhost"}:` +
+            `${microserviceOptions.options.port}...`
+    );
 }
 
 bootstrap();

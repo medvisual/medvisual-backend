@@ -20,11 +20,12 @@ import { IMAGE_HANDLER_CLIENT } from "./constants/constants";
 
                     const clientOptions: TcpClientOptions = {
                         transport: Transport.TCP,
-                        options: {}
+                        options: {
+                            host: configService.get<string>(
+                                "microservices.imageHandler.host"
+                            )
+                        }
                     };
-                    clientOptions.options.host = configService.get<string>(
-                        "microservices.imageHandler.host"
-                    );
                     // When running locally, specify the port
                     if (isDevelopment) {
                         clientOptions.options.port = configService.get<number>(
