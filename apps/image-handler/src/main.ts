@@ -5,20 +5,23 @@ import { ValidationPipe } from "@nestjs/common";
 import { ImageHandlerModule } from "./image-handler.module";
 
 async function bootstrap() {
-    const microserviceOptions: MicroserviceOptions = {
-        transport: Transport.TCP,
-        options: {
-            port: parseInt(process.env.PORT, 10)
-        }
-    };
-    const isDevelopment: boolean = process.env.NODE_ENV === "development";
-    if (isDevelopment) {
-        microserviceOptions.options.host = process.env.HOST;
-    }
+    const isProduction: boolean = process.env.NODE_ENV === "production";
+    const rmqUrl = isProduction
+        ? process.env.CLOUDAMPQ_URL
+        : process.env.RMQ_URL || "rabbitmq";
 
     const app = await NestFactory.createMicroservice<MicroserviceOptions>(
         ImageHandlerModule,
-        microserviceOptions
+        {
+            transport: Transport.RMQ,
+            options: {
+                urls: [rmqUrl],
+                queue: process.env.RMQ_QUEUE,
+                queueOptions: {
+                    durable: false
+                }
+            }
+        }
     );
     app.useGlobalPipes(
         new ValidationPipe({
@@ -27,11 +30,7 @@ async function bootstrap() {
     );
 
     await app.listen();
-    console.log(
-        `Microservice is running on ` +
-            `${microserviceOptions.options.host || "localhost"}:` +
-            `${microserviceOptions.options.port}...`
-    );
+    console.log(`Microservice is running [production: ${isProduction}]...`);
 }
 
 bootstrap();

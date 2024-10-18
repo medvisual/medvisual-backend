@@ -1,17 +1,26 @@
 services:
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - "5672:5672"
+
   api-gateway:
     build:
       context: .
       dockerfile: ./apps/api-gateway/Dockerfile
       target: development
     command: npm run start:dev api-gateway
+    env_file:
+      - ./apps/api-gateway/.env
     depends_on:
+      - rabbitmq
       - image-handler
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - "3000:3000"
+      
   image-handler:
     build:
       context: .
@@ -20,6 +29,8 @@ services:
     command: npm run start:dev image-handler
     env_file:
       - ./apps/image-handler/.env
+    depends_on:
+      - rabbitmq
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules

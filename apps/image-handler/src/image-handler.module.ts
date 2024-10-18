@@ -15,8 +15,8 @@ import { GeminiClientModule } from "./gemini-client/gemini-client.module";
                 NODE_ENV: Joi.string()
                     .valid("development", "production")
                     .default("development"),
-                HOST: Joi.string().hostname().default("0.0.0.0"),
-                PORT: Joi.number().port().default(3001),
+                RMQ_URL: Joi.string().uri().required(),
+                RMQ_QUEUE: Joi.string().required(),
                 GEMINI_API_KEY: Joi.string().required(),
                 GEMINI_MODEL: Joi.string().required(),
                 BASE_DISEASE_IMAGE_PROMPT: Joi.string().required()

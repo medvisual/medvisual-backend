@@ -18,7 +18,9 @@ export class ImageHandlerService {
     ) {}
 
     async onApplicationBootstrap() {
-        await this.imageHandlerClient.connect();
+        await this.imageHandlerClient.connect().catch((err) => {
+            consola.error(err);
+        });
     }
 
     processImage(image: Express.Multer.File, diseaseInfoDto: DiseaseInfoDto) {

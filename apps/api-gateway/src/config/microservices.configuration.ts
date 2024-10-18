@@ -1,8 +1,14 @@
-export default () => ({
-    microservices: {
-        imageHandler: {
-            host: process.env.IMAGE_HANDLER_HOST,
-            port: parseInt(process.env.IMAGE_HANDLER_PORT, 10)
+export default () => {
+    const isProduction: boolean = process.env.NODE_ENV === "production";
+
+    return {
+        microservices: {
+            imageHandler: {
+                rmqUrl: isProduction
+                    ? process.env.CLOUDAMPQ_URL
+                    : process.env.RMQ_URL,
+                rmqQueue: process.env.RMQ_IMAGE_HANDLER_QUEUE
+            }
         }
-    }
-});
+    };
+};

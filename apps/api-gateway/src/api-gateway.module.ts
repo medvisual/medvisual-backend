@@ -19,8 +19,8 @@ import microservicesConfig from "./config/microservices.configuration";
                     .valid("development", "production")
                     .default("development"),
                 PORT: Joi.number().port().default(3000),
-                IMAGE_HANDLER_HOST: Joi.string().hostname().required(),
-                IMAGE_HANDLER_PORT: Joi.number().port()
+                RMQ_URL: Joi.string().uri().required(),
+                RMQ_IMAGE_HANDLER_QUEUE: Joi.string().required()
             }),
             validationOptions: {
                 allowUnknown: true,
