@@ -7,7 +7,7 @@ import { ImageHandlerModule } from "./image-handler.module";
 async function bootstrap() {
     const isProduction: boolean = process.env.NODE_ENV === "production";
     const rmqUrl = isProduction
-        ? process.env.CLOUDAMPQ_URL
+        ? process.env.CLOUDAMQP_URL
         : process.env.RMQ_URL || "rabbitmq";
 
     const app = await NestFactory.createMicroservice<MicroserviceOptions>(
