@@ -1,4 +1,4 @@
-import { MessagePattern } from "@nestjs/microservices";
+import { MessagePattern, Payload } from "@nestjs/microservices";
 import { Controller } from "@nestjs/common";
 import { consola } from "consola";
 
@@ -12,7 +12,7 @@ export class ImageHandlerController {
 
     // As for now, response valdation is needed only at the very output (ResponseValidationInterceptor in api-gateway)
     @MessagePattern(IMAGE_HANDLER_PATTERNS.PROCESS_IMAGE)
-    processImage(imageUploadDto: ImageUploadDto) {
+    processImage(@Payload() imageUploadDto: ImageUploadDto) {
         consola.info(imageUploadDto);
 
         return this.imageHandlerService.forwardImage(imageUploadDto);

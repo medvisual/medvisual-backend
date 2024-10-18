@@ -15,6 +15,7 @@ import { GeminiClientModule } from "./gemini-client/gemini-client.module";
                 NODE_ENV: Joi.string()
                     .valid("development", "production")
                     .default("development"),
+                IMAGE_UPLOAD_FOLDER: Joi.string().required(),
                 RMQ_URL: Joi.string().uri().required(),
                 RMQ_QUEUE: Joi.string().required(),
                 GEMINI_API_KEY: Joi.string().required(),

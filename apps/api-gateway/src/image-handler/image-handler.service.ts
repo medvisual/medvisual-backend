@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
+import { lastValueFrom } from "rxjs";
 import { consola } from "consola";
 
 import { DiseaseInfoDto } from "./dto/disease-info.dto";
@@ -23,15 +24,26 @@ export class ImageHandlerService {
         });
     }
 
-    processImage(image: Express.Multer.File, diseaseInfoDto: DiseaseInfoDto) {
+    async analyzeImage(
+        imageData: Express.Multer.File,
+        imageBuffer: Buffer,
+        diseaseInfoDto: DiseaseInfoDto
+    ) {
         consola.info(diseaseInfoDto, diseaseInfoDto.diseaseCategory);
 
-        return this.imageHandlerClient.send<
-            ClientVerdictDto,
-            ClientImageUploadDto
-        >(IMAGE_HANDLER_PATTERNS.PROCESS_IMAGE, {
-            image: image,
-            data: diseaseInfoDto
-        });
+        return await lastValueFrom(
+            this.imageHandlerClient.send<
+                ClientVerdictDto,
+                ClientImageUploadDto
+            >(IMAGE_HANDLER_PATTERNS.PROCESS_IMAGE, {
+                image: {
+                    name: imageData.filename,
+                    // Serialize the image buffer to base64 string
+                    buffer: imageBuffer.toString("base64"),
+                    mimetype: imageData.mimetype
+                },
+                data: diseaseInfoDto
+            })
+        );
     }
 }

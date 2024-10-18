@@ -24,11 +24,11 @@ export class ApiGatewayController {
         new ResponseValidationInterceptor(ImageVerdictDto)
     )
     forwardImageToHandler(
-        @UploadedFile() image: Express.Multer.File,
+        @UploadedFile() imageData: Express.Multer.File,
         @Body() diseaseInfoDto: DiseaseInfoDto
     ) {
         return this.apiGatewayService.forwardImageToHandler(
-            image,
+            imageData,
             diseaseInfoDto
         );
     }
