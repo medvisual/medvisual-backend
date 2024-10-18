@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { MulterModule } from "@nestjs/platform-express";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import * as Joi from "joi";
 
 import { ApiGatewayController } from "./api-gateway.controller";
@@ -19,6 +19,7 @@ import microservicesConfig from "./config/microservices.configuration";
                     .valid("development", "production")
                     .default("development"),
                 PORT: Joi.number().port().default(3000),
+                IMAGE_UPLOAD_FOLDER: Joi.string().required(),
                 RMQ_URL: Joi.string().uri().required(),
                 RMQ_IMAGE_HANDLER_QUEUE: Joi.string().required()
             }),
@@ -29,8 +30,13 @@ import microservicesConfig from "./config/microservices.configuration";
             isGlobal: true,
             load: [applicationConfig, microservicesConfig]
         }),
-        MulterModule.register({
-            dest: "./tmp"
+        MulterModule.registerAsync({
+            useFactory: async (configService: ConfigService) => {
+                return {
+                    dest: configService.get<string>("imageUploadFolder")
+                };
+            },
+            inject: [ConfigService]
         }),
         ImageHandlerModule
     ],

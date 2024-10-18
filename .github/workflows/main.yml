@@ -72,6 +72,7 @@ jobs:
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
           heroku_app_name: "medvisual-api-gateway"
           appdir: "apps/api-gateway"
+          
   deploy-image-handler:
     name: image-handler -> CI/CD (if changed)
     runs-on: ubuntu-latest

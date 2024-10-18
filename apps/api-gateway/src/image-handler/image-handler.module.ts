@@ -10,7 +10,7 @@ import { IMAGE_HANDLER_CLIENT } from "./constants/constants";
         ClientsModule.registerAsync([
             {
                 name: IMAGE_HANDLER_CLIENT,
-                useFactory: (configService: ConfigService) => {
+                useFactory: async (configService: ConfigService) => {
                     return {
                         transport: Transport.RMQ,
                         options: {
