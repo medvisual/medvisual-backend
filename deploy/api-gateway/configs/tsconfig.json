@@ -23,7 +23,13 @@
       ],
       "@medvisual/contracts/*": [
         "./libs/contracts/src/*"
+      ],
+      "@medvisual/common": [
+        "libs/common/src"
+      ],
+      "@medvisual/common/*": [
+        "libs/common/src/*"
       ]
-    }
+    },
   }
 }
