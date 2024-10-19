@@ -1,6 +1,12 @@
-import { IsNumber, IsString } from "class-validator";
+import {
+    ArrayMinSize,
+    IsArray,
+    IsNumber,
+    IsString,
+    ValidateNested
+} from "class-validator";
 
-export class GeminiVerdictDto {
+class GeminiDiseaseVerdictDto {
     /**
      * Title of a disease (disease category) passed to Gemini
      */
@@ -24,4 +30,14 @@ export class GeminiVerdictDto {
      */
     @IsString()
     advice: string;
+}
+
+export class GeminiVerdictDto {
+    /**
+     * Array of verdicts for each presumed disease associated with the image
+     */
+    @IsArray()
+    @ArrayMinSize(1)
+    @ValidateNested()
+    verdicts: GeminiDiseaseVerdictDto[];
 }

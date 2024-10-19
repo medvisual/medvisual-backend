@@ -1,7 +1,13 @@
 import { Exclude } from "class-transformer";
-import { IsNumber, IsString } from "class-validator";
+import {
+    ArrayMinSize,
+    IsArray,
+    IsNumber,
+    IsString,
+    ValidateNested
+} from "class-validator";
 
-export class ImageVerdictDto {
+class DiseaseVerdictDto {
     /**
      * Title of a disease (disease category) passed to AI
      */
@@ -25,4 +31,14 @@ export class ImageVerdictDto {
      */
     @Exclude()
     advice: string;
+}
+
+export class ImageVerdictDto {
+    /**
+     * Array of verdicts for each presumed disease associated with the image
+     */
+    @IsArray()
+    @ArrayMinSize(1)
+    @ValidateNested()
+    verdicts: DiseaseVerdictDto[];
 }

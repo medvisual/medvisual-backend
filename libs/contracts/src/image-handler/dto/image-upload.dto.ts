@@ -1,11 +1,13 @@
 import {
+    ArrayMaxSize,
+    ArrayMinSize,
+    IsArray,
     IsBase64,
     IsMimeType,
     IsNotEmpty,
     IsString,
     ValidateNested
 } from "class-validator";
-import { DiseaseInfoDto } from "./disease-info.dto";
 
 class File {
     /**
@@ -36,8 +38,11 @@ export class ImageUploadDto {
     image: File;
 
     /**
-     * Additional information about the disease
+     * Array of presumed diseases (diseases categories) associated with the image
      */
-    @ValidateNested()
-    data: DiseaseInfoDto;
+    @IsArray()
+    @ArrayMinSize(1)
+    @ArrayMaxSize(10)
+    @IsString({ each: true })
+    presumedDiseases: string[];
 }

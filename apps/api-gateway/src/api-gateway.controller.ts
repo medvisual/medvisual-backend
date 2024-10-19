@@ -9,8 +9,8 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { Express } from "express";
 
 import { ApiGatewayService } from "./api-gateway.service";
-import { DiseaseInfoDto } from "./image-handler/dto/disease-info.dto";
-import { ResponseValidationInterceptor } from "./interceptors/response-validation.interceptor";
+import { DiseasesInfoDto } from "./image-handler/dto/diseases-info.dto";
+import { ResponseValidationInterceptor } from "@medvisual/common";
 import { ImageVerdictDto } from "./image-handler/dto/image-verdict.dto";
 
 @Controller("/api")
@@ -25,11 +25,11 @@ export class ApiGatewayController {
     )
     forwardImageToHandler(
         @UploadedFile() imageData: Express.Multer.File,
-        @Body() diseaseInfoDto: DiseaseInfoDto
+        @Body() diseasesInfoDto: DiseasesInfoDto
     ) {
         return this.apiGatewayService.forwardImageToHandler(
             imageData,
-            diseaseInfoDto
+            diseasesInfoDto
         );
     }
 }

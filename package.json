@@ -83,7 +83,8 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
-      "^@medvisual/contracts(|/.*)$": "<rootDir>/libs/contracts/src/$1"
+      "^@medvisual/contracts(|/.*)$": "<rootDir>/libs/contracts/src/$1",
+      "^@medvisual/common(|/.*)$": "<rootDir>/libs/common/src/$1"
     }
   }
 }

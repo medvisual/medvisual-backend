@@ -3,7 +3,7 @@ import * as fs from "node:fs";
 import { consola } from "consola";
 
 import { ImageHandlerService } from "./image-handler/image-handler.service";
-import { DiseaseInfoDto } from "./image-handler/dto/disease-info.dto";
+import { DiseasesInfoDto } from "./image-handler/dto/diseases-info.dto";
 
 @Injectable()
 export class ApiGatewayService {
@@ -11,7 +11,7 @@ export class ApiGatewayService {
 
     forwardImageToHandler(
         imageData: Express.Multer.File,
-        diseaseInfoDto: DiseaseInfoDto
+        diseasesInfoDto: DiseasesInfoDto
     ) {
         // File is read because unable to get buffer from the multer file in this context
         // Or perhaps should look into MemoryStorage in the future
@@ -23,7 +23,7 @@ export class ApiGatewayService {
         return this.imageHandlerService.analyzeImage(
             imageData,
             imageBuffer,
-            diseaseInfoDto
+            diseasesInfoDto.presumedDiseases.split(", ")
         );
     }
 }

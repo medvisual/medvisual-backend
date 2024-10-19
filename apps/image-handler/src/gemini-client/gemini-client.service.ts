@@ -37,8 +37,10 @@ export class GeminiClientService {
     async getDiseaseInfoFromImage(
         imageUploadDto: ImageUploadDto
     ): Promise<GeminiVerdictDto> {
+        // Generate the prompt to analyze the image and compile statistics on presumed diseases
         const prompt: string =
-            this.baseDiseaseImagePrompt + imageUploadDto.data.diseaseCategory;
+            this.baseDiseaseImagePrompt +
+            imageUploadDto.presumedDiseases.join(", ");
 
         try {
             // Ideally, this should be substituted with a CDN
