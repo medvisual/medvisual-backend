@@ -1,7 +1,7 @@
 {
   "name": "api-gateway",
   "version": "0.0.1",
-  "description": "Backend API gateway",
+  "description": "Backend API gateway HTTP server",
   "author": "nikameru",
   "private": true,
   "license": "GPL-3.0-only",

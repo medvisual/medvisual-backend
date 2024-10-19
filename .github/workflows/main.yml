@@ -24,6 +24,7 @@ jobs:
           filters: |
             service:
               - 'apps/api-gateway/**'
+              - 'deploy/api-gateway/**'
 
       - name: Check for changes in image-handler
         id: image_handler
@@ -32,6 +33,7 @@ jobs:
           filters: |
             service:
               - 'apps/image-handler/**'
+              - 'deploy/image-handler/**'
 
   deploy-api-gateway:
     name: api-gateway -> CI/CD (if changed)

@@ -1,7 +1,7 @@
 {
   "name": "image-handler",
   "version": "0.0.1",
-  "description": "Backend image handler (disease detection)",
+  "description": "Backend image handler microservice (disease detection)",
   "author": "nikameru",
   "private": true,
   "license": "GPL-3.0-only",
