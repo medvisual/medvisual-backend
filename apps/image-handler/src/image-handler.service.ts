@@ -7,7 +7,7 @@ import { ImageUploadDto } from "@medvisual/contracts/image-handler";
 export class ImageHandlerService {
     constructor(private geminiClientService: GeminiClientService) {}
 
-    forwardImage(imageUploadDto: ImageUploadDto) {
+    analyzeImage(imageUploadDto: ImageUploadDto) {
         return this.geminiClientService.getDiseaseInfoFromImage(imageUploadDto);
     }
 }

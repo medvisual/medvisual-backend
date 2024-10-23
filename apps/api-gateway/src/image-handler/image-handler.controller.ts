@@ -8,28 +8,28 @@ import {
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Express } from "express";
 
-import { ApiGatewayService } from "./api-gateway.service";
-import { DiseasesInfoDto } from "./image-handler/dto/diseases-info.dto";
+import { ImageHandlerService } from "./image-handler.service";
+import { DiseasesInfoDto } from "./dto/diseases-info.dto";
 import { ResponseValidationInterceptor } from "@medvisual/common";
-import { ImageVerdictDto } from "./image-handler/dto/image-verdict.dto";
+import { ImageVerdictsDto } from "./dto/image-verdicts.dto";
 
-@Controller("/api")
-export class ApiGatewayController {
-    constructor(private readonly apiGatewayService: ApiGatewayService) {}
+@Controller("/api/visual")
+export class ImageHandlerController {
+    constructor(private readonly imageHandlerService: ImageHandlerService) {}
 
-    @Post("/upload-image")
+    @Post("/create")
     @UseInterceptors(
         FileInterceptor("image"),
         // No specific transformations are needed right now, this should work just fine
-        new ResponseValidationInterceptor(ImageVerdictDto)
+        new ResponseValidationInterceptor(ImageVerdictsDto)
     )
-    forwardImageToHandler(
+    analyzeImage(
         @UploadedFile() imageData: Express.Multer.File,
         @Body() diseasesInfoDto: DiseasesInfoDto
     ) {
-        return this.apiGatewayService.forwardImageToHandler(
+        return this.imageHandlerService.analyzeImage(
             imageData,
-            diseasesInfoDto
+            diseasesInfoDto.presumedDiseases.split(",")
         );
     }
 }

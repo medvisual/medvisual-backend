@@ -33,7 +33,7 @@ class DiseaseVerdictDto {
     advice: string;
 }
 
-export class ImageVerdictDto {
+export class ImageVerdictsDto {
     /**
      * Array of verdicts for each presumed disease associated with the image
      */
