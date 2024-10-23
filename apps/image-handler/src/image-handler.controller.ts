@@ -15,11 +15,11 @@ export class ImageHandlerController {
     constructor(private readonly imageHandlerService: ImageHandlerService) {}
 
     // As for now, response valdation is needed only at the very output (ResponseValidationInterceptor in api-gateway)
-    @MessagePattern(IMAGE_HANDLER_PATTERNS.PROCESS_IMAGE)
+    @MessagePattern(IMAGE_HANDLER_PATTERNS.HANDLE_IMAGE)
     @UseInterceptors(new ResponseValidationInterceptor(GeminiVerdictDto))
-    processImage(@Payload() imageUploadDto: ImageUploadDto) {
+    handleImage(@Payload() imageUploadDto: ImageUploadDto) {
         consola.info(imageUploadDto);
 
-        return this.imageHandlerService.forwardImage(imageUploadDto);
+        return this.imageHandlerService.analyzeImage(imageUploadDto);
     }
 }

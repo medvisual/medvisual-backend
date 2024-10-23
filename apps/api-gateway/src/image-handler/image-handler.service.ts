@@ -2,6 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom } from "rxjs";
 import { consola } from "consola";
+import * as fs from "fs";
 
 import { IMAGE_HANDLER_CLIENT } from "./constants/constants";
 import { IMAGE_HANDLER_PATTERNS } from "@medvisual/contracts/image-handler";
@@ -25,16 +26,22 @@ export class ImageHandlerService {
 
     async analyzeImage(
         imageData: Express.Multer.File,
-        imageBuffer: Buffer,
         presumedDiseases: string[]
     ) {
         consola.info(`Presumed diseases: ${presumedDiseases.join(", ")}`);
+
+        // File is read because unable to get buffer from the multer file in this context
+        // Or perhaps should look into MemoryStorage in the future
+        const imageBuffer = fs.readFileSync(imageData.path);
+        consola.success(
+            `Read file from ${imageData.path}: ${imageBuffer.length} bytes`
+        );
 
         return await lastValueFrom(
             this.imageHandlerClient.send<
                 ClientVerdictDto,
                 ClientImageUploadDto
-            >(IMAGE_HANDLER_PATTERNS.PROCESS_IMAGE, {
+            >(IMAGE_HANDLER_PATTERNS.HANDLE_IMAGE, {
                 image: {
                     name: imageData.filename,
                     // Serialize the image buffer to base64 string

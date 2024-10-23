@@ -1,3 +1,3 @@
 export const IMAGE_HANDLER_PATTERNS = {
-    PROCESS_IMAGE: "image-handler.processImage"
+    HANDLE_IMAGE: "image-handler.handleImage"
 };

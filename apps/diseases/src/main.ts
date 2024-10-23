@@ -1,16 +1,16 @@
 import { NestFactory } from "@nestjs/core";
-import { MicroserviceOptions, Transport } from "@nestjs/microservices";
 import { ValidationPipe } from "@nestjs/common";
+import { MicroserviceOptions, Transport } from "@nestjs/microservices";
 
-import { ImageHandlerModule } from "./image-handler.module";
 import microserviceConfig from "./config/configuration";
+import { DiseasesAppModule } from "./diseases-app.module";
 
 async function bootstrap() {
     const config = microserviceConfig();
     const rmqUrl = config.rmq.url;
 
     const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-        ImageHandlerModule,
+        DiseasesAppModule,
         {
             transport: Transport.RMQ,
             options: {
@@ -33,5 +33,4 @@ async function bootstrap() {
         `Microservice is running [production: ${config.environment === "production"}]...`
     );
 }
-
 bootstrap();

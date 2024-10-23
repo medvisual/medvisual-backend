@@ -14,24 +14,23 @@ import { diseaseImageSchema } from "./schemas/gemini-client.schemas";
 export class GeminiClientService {
     public constructor(private configService: ConfigService) {}
 
-    private readonly imageUploadFolder = this.configService.get<string>(
-        "IMAGE_UPLOAD_FOLDER"
-    );
+    private readonly imageUploadFolder =
+        this.configService.get<string>("imageUploadFolder");
     private readonly ai = new GoogleGenerativeAI(
-        this.configService.get<string>("GEMINI_API_KEY")
+        this.configService.get<string>("ai.geminiApiKey")
     );
     private readonly model = this.ai.getGenerativeModel({
-        model: this.configService.get<string>("GEMINI_MODEL"),
+        model: this.configService.get<string>("ai.geminiModel"),
         generationConfig: {
             responseMimeType: "application/json",
             responseSchema: diseaseImageSchema
         }
     });
     private readonly fileManager = new GoogleAIFileManager(
-        this.configService.get<string>("GEMINI_API_KEY")
+        this.configService.get<string>("ai.geminiApiKey")
     );
     private readonly baseDiseaseImagePrompt = this.configService.get<string>(
-        "BASE_DISEASE_IMAGE_PROMPT"
+        "ai.prompts.baseDiseaseImage"
     );
 
     async getDiseaseInfoFromImage(
@@ -43,7 +42,7 @@ export class GeminiClientService {
             imageUploadDto.presumedDiseases.join(", ");
 
         try {
-            // Ideally, this should be substituted with a CDN
+            // TODO: Ideally, this should be substituted with S3 or something
             const uploadFolder = resolve(__dirname, this.imageUploadFolder);
             const uploadPath = resolve(uploadFolder, imageUploadDto.image.name);
 

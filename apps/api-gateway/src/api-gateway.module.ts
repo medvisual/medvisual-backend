@@ -1,13 +1,11 @@
 import { Module } from "@nestjs/common";
-import { MulterModule } from "@nestjs/platform-express";
-import { ConfigModule, ConfigService } from "@nestjs/config";
+import { ConfigModule } from "@nestjs/config";
 import * as Joi from "joi";
 
-import { ApiGatewayController } from "./api-gateway.controller";
-import { ApiGatewayService } from "./api-gateway.service";
-import { ImageHandlerModule } from "./image-handler/image-handler.module";
 import applicationConfig from "./config/api-gateway.configuration";
 import microservicesConfig from "./config/microservices.configuration";
+import { ImageHandlerModule } from "./image-handler/image-handler.module";
+import { DiseasesModule } from "./diseases/diseases.module";
 
 @Module({
     imports: [
@@ -30,17 +28,8 @@ import microservicesConfig from "./config/microservices.configuration";
             isGlobal: true,
             load: [applicationConfig, microservicesConfig]
         }),
-        MulterModule.registerAsync({
-            useFactory: async (configService: ConfigService) => {
-                return {
-                    dest: configService.get<string>("imageUploadFolder")
-                };
-            },
-            inject: [ConfigService]
-        }),
-        ImageHandlerModule
-    ],
-    controllers: [ApiGatewayController],
-    providers: [ApiGatewayService]
+        ImageHandlerModule,
+        DiseasesModule
+    ]
 })
 export class ApiGatewayModule {}
