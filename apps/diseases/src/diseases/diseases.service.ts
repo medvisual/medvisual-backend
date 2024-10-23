@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { CreateDiseaseDto } from "../../../../libs/contracts/src/diseases/dto/create-disease.dto";
-import { UpdateDiseaseDto } from "../../../../libs/contracts/src/diseases/dto/update-disease.dto";
+import { CreateDiseaseDto } from "@medvisual/contracts/diseases";
+import { UpdateDiseaseDto } from "@medvisual/contracts/diseases";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Disease } from "./entities/disease.entity";
