@@ -125,7 +125,7 @@ jobs:
           appdir: "apps/image-handler"
   
   deploy-diseases:
-    name: deploy-diseases -> CI/CD (if changed)
+    name: diseases -> CI/CD (if changed)
     runs-on: ubuntu-latest
     needs: check-for-changes
     if: needs.check-for-changes.outputs.diseases_changed == 'true'
