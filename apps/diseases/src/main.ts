@@ -33,4 +33,5 @@ async function bootstrap() {
         `Microservice is running [production: ${config.environment === "production"}]...`
     );
 }
+
 bootstrap();

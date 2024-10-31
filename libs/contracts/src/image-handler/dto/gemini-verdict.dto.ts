@@ -38,6 +38,6 @@ export class GeminiVerdictDto {
      */
     @IsArray()
     @ArrayMinSize(1)
-    @ValidateNested()
+    @ValidateNested({ each: true })
     verdicts: GeminiDiseaseVerdictDto[];
 }

@@ -1,52 +1,55 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 
-import { DISEASES_CLIENT } from "./constants/constants";
+import { DISEASES_CLIENT_NAME } from "./constants/constants";
 import {
     DISEASES_PATTERNS,
     CreateDiseaseDto as ClientCreateDiseaseDto,
-    UpdateDiseaseDto as ClientUpdateDiseaseDto
+    UpdateDiseaseDto as ClientUpdateDiseaseDto,
+    DiseaseDto as ClientDiseaseDto
 } from "@medvisual/contracts/diseases";
-import { lastValueFrom } from "rxjs";
+import { UpdateDiseaseDto } from "./dto/update-disease.dto";
 
 @Injectable()
 export class DiseasesService {
     constructor(
-        @Inject(DISEASES_CLIENT)
+        @Inject(DISEASES_CLIENT_NAME)
         private readonly diseasesClient: ClientProxy
     ) {}
 
-    // TODO: Return the disease or something
-
     createDisease(createDiseaseDto: ClientCreateDiseaseDto) {
-        return this.diseasesClient.send<unknown, ClientCreateDiseaseDto>(
-            DISEASES_PATTERNS.CREATE,
-            createDiseaseDto
-        );
+        return this.diseasesClient.send<
+            ClientDiseaseDto,
+            ClientCreateDiseaseDto
+        >(DISEASES_PATTERNS.CREATE, createDiseaseDto);
     }
 
-    async getDiseases() {
-        return await lastValueFrom(
-            this.diseasesClient.send(DISEASES_PATTERNS.FIND_ALL, {})
+    getDiseases() {
+        return this.diseasesClient.send<ClientDiseaseDto[]>(
+            DISEASES_PATTERNS.FIND_ALL,
+            {}
         );
     }
 
     getDisease(id: number) {
-        return this.diseasesClient.send<unknown, number>(
+        return this.diseasesClient.send<ClientDiseaseDto, number>(
             DISEASES_PATTERNS.FIND_ONE,
             id
         );
     }
 
-    updateDisease(updateDiseaseDto: ClientUpdateDiseaseDto) {
-        return this.diseasesClient.send<unknown, ClientUpdateDiseaseDto>(
-            DISEASES_PATTERNS.UPDATE,
-            updateDiseaseDto
-        );
+    updateDisease(id: number, data: UpdateDiseaseDto) {
+        return this.diseasesClient.send<
+            ClientDiseaseDto,
+            ClientUpdateDiseaseDto
+        >(DISEASES_PATTERNS.UPDATE, {
+            id,
+            ...data
+        });
     }
 
     deleteDisease(id: number) {
-        return this.diseasesClient.send<unknown, number>(
+        return this.diseasesClient.send<void, number>(
             DISEASES_PATTERNS.REMOVE,
             id
         );

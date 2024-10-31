@@ -8,6 +8,6 @@ export class ImageHandlerService {
     constructor(private geminiClientService: GeminiClientService) {}
 
     analyzeImage(imageUploadDto: ImageUploadDto) {
-        return this.geminiClientService.getDiseaseInfoFromImage(imageUploadDto);
+        return this.geminiClientService.getGeminiImageVerdict(imageUploadDto);
     }
 }

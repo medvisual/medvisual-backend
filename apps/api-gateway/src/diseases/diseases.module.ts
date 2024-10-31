@@ -1,37 +1,17 @@
 import { Module } from "@nestjs/common";
-import { ClientsModule, Transport } from "@nestjs/microservices";
-import { ConfigService } from "@nestjs/config";
 
 import { DiseasesService } from "./diseases.service";
-import { DISEASES_CLIENT } from "./constants/constants";
+import { DISEASES_CLIENT_NAME } from "./constants/constants";
 import { DiseasesController } from "./diseases.controller";
+import { RmqModule } from "@medvisual/common/rmq";
+import { DISEASES_SERVICE_NAME } from "@medvisual/contracts/diseases";
 
 @Module({
     imports: [
-        ClientsModule.registerAsync([
-            {
-                name: DISEASES_CLIENT,
-                useFactory: async (configService: ConfigService) => {
-                    return {
-                        transport: Transport.RMQ,
-                        options: {
-                            urls: [
-                                configService.get<string>(
-                                    "microservices.diseases.rmqUrl"
-                                )
-                            ],
-                            queue: configService.get<string>(
-                                "microservices.diseases.rmqQueue"
-                            ),
-                            queueOptions: {
-                                durable: false
-                            }
-                        }
-                    };
-                },
-                inject: [ConfigService]
-            }
-        ])
+        RmqModule.register({
+            clientName: DISEASES_CLIENT_NAME,
+            serviceName: DISEASES_SERVICE_NAME
+        })
     ],
     controllers: [DiseasesController],
     providers: [DiseasesService]

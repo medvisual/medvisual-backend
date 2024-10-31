@@ -6,6 +6,8 @@ import applicationConfig from "./config/api-gateway.configuration";
 import microservicesConfig from "./config/microservices.configuration";
 import { ImageHandlerModule } from "./image-handler/image-handler.module";
 import { DiseasesModule } from "./diseases/diseases.module";
+import { UsersModule } from "./users/users.module";
+import { AuthModule } from "./auth/auth.module";
 
 @Module({
     imports: [
@@ -18,8 +20,13 @@ import { DiseasesModule } from "./diseases/diseases.module";
                     .default("development"),
                 PORT: Joi.number().port().default(3000),
                 IMAGE_UPLOAD_FOLDER: Joi.string().required(),
-                RMQ_URL: Joi.string().uri().required(),
-                RMQ_IMAGE_HANDLER_QUEUE: Joi.string().required()
+                RMQ_URL: Joi.string().uri(),
+                RMQ_IMAGE_HANDLER_QUEUE: Joi.string().required(),
+                RMQ_DISEASES_QUEUE: Joi.string().required(),
+                RMQ_USERS_QUEUE: Joi.string().required(),
+                RMQ_AUTH_QUEUE: Joi.string().required(),
+                JWT_ACCESS_SECRET: Joi.string().token().required(),
+                JWT_REFRESH_SECRET: Joi.string().token().required()
             }),
             validationOptions: {
                 allowUnknown: true,
@@ -29,7 +36,9 @@ import { DiseasesModule } from "./diseases/diseases.module";
             load: [applicationConfig, microservicesConfig]
         }),
         ImageHandlerModule,
-        DiseasesModule
+        DiseasesModule,
+        UsersModule,
+        AuthModule
     ]
 })
 export class ApiGatewayModule {}

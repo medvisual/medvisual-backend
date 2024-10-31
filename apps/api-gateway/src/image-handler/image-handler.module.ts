@@ -1,38 +1,19 @@
 import { Module } from "@nestjs/common";
-import { ClientsModule, Transport } from "@nestjs/microservices";
 import { ConfigService } from "@nestjs/config";
 import { MulterModule } from "@nestjs/platform-express";
 
 import { ImageHandlerService } from "./image-handler.service";
-import { IMAGE_HANDLER_CLIENT } from "./constants/constants";
+import { IMAGE_HANDLER_CLIENT_NAME } from "./constants/constants";
 import { ImageHandlerController } from "./image-handler.controller";
+import { IMAGE_HANDLER_SERVICE_NAME } from "@medvisual/contracts/image-handler";
+import { RmqModule } from "@medvisual/common/rmq/rmq.module";
 
 @Module({
     imports: [
-        ClientsModule.registerAsync([
-            {
-                name: IMAGE_HANDLER_CLIENT,
-                useFactory: async (configService: ConfigService) => {
-                    return {
-                        transport: Transport.RMQ,
-                        options: {
-                            urls: [
-                                configService.get<string>(
-                                    "microservices.imageHandler.rmqUrl"
-                                )
-                            ],
-                            queue: configService.get<string>(
-                                "microservices.imageHandler.rmqQueue"
-                            ),
-                            queueOptions: {
-                                durable: false
-                            }
-                        }
-                    };
-                },
-                inject: [ConfigService]
-            }
-        ]),
+        RmqModule.register({
+            clientName: IMAGE_HANDLER_CLIENT_NAME,
+            serviceName: IMAGE_HANDLER_SERVICE_NAME
+        }),
         MulterModule.registerAsync({
             useFactory: async (configService: ConfigService) => {
                 return {

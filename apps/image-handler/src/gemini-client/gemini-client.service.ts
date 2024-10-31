@@ -9,6 +9,7 @@ import * as fs from "node:fs";
 import { ImageUploadDto } from "@medvisual/contracts/image-handler";
 import { GeminiVerdictDto } from "@medvisual/contracts/image-handler/dto/gemini-verdict.dto";
 import { diseaseImageSchema } from "./schemas/gemini-client.schemas";
+import { RpcException } from "@nestjs/microservices";
 
 @Injectable()
 export class GeminiClientService {
@@ -33,7 +34,7 @@ export class GeminiClientService {
         "ai.prompts.baseDiseaseImage"
     );
 
-    async getDiseaseInfoFromImage(
+    async getGeminiImageVerdict(
         imageUploadDto: ImageUploadDto
     ): Promise<GeminiVerdictDto> {
         // Generate the prompt to analyze the image and compile statistics on presumed diseases
@@ -89,8 +90,7 @@ export class GeminiClientService {
 
             return JSON.parse(result.response.text());
         } catch (error) {
-            // TODO: Implement exception filter instead?
-            consola.error(error);
+            throw new RpcException("Unable to analyze image");
         }
     }
 }

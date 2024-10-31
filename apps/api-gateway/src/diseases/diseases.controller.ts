@@ -36,8 +36,7 @@ export class DiseasesController {
         @Param("id") id: number,
         @Body() updateDiseaseDto: UpdateDiseaseDto
     ) {
-        updateDiseaseDto.id = id;
-        return this.diseasesService.updateDisease(updateDiseaseDto);
+        return this.diseasesService.updateDisease(id, updateDiseaseDto);
     }
 
     @Delete("/:id")

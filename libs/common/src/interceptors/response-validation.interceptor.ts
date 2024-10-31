@@ -5,12 +5,12 @@ import {
     CallHandler,
     InternalServerErrorException
 } from "@nestjs/common";
+import { RpcException } from "@nestjs/microservices";
 import { instanceToPlain, plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { Observable } from "rxjs";
 import { switchMap } from "rxjs/operators";
 
-// Might be moved in the common library later if needed
 @Injectable()
 export class ResponseValidationInterceptor<T extends object>
     implements NestInterceptor<any, T>
@@ -27,10 +27,17 @@ export class ResponseValidationInterceptor<T extends object>
 
                 const errors = await validate(transformedData);
                 if (errors.length > 0) {
-                    throw new InternalServerErrorException({
-                        message: "Intercepted response validation failed",
-                        errors
-                    });
+                    if (context.getType() === "http") {
+                        throw new InternalServerErrorException({
+                            message: "Intercepted response validation failed",
+                            errors
+                        });
+                    } else if (context.getType() === "rpc") {
+                        throw new RpcException({
+                            message: "Intercepted response validation failed",
+                            errors
+                        });
+                    }
                 }
 
                 return transformedData;

@@ -11,7 +11,7 @@ export class Disease {
     /**
      * Name of the disease
      */
-    @Column()
+    @Column({ unique: true })
     name: string;
 
     /**

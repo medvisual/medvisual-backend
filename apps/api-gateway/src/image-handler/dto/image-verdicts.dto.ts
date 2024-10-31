@@ -39,6 +39,6 @@ export class ImageVerdictsDto {
      */
     @IsArray()
     @ArrayMinSize(1)
-    @ValidateNested()
+    @ValidateNested({ each: true })
     verdicts: DiseaseVerdictDto[];
 }

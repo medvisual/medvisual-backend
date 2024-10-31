@@ -13,6 +13,8 @@ jobs:
       api_gateway_changed: ${{ steps.api_gateway.outputs.service }}
       image_handler_changed: ${{ steps.image_handler.outputs.service }}
       diseases_changed: ${{ steps.diseases.outputs.service }}
+      users_changed: ${{ steps.users.outputs.service }}
+      auth_changed: ${{ steps.auth.outputs.service }}
 
     steps:
       - name: Checkout code
@@ -44,6 +46,24 @@ jobs:
             service:
               - 'apps/diseases/**'
               - 'deploy/diseases/**'
+      
+      - name: Check for changes in users
+        id: users
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            service:
+              - 'apps/users/**'
+              - 'deploy/users/**'
+
+      - name: Check for changes in auth
+        id: auth
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            service:
+              - 'apps/auth/**'
+              - 'deploy/auth/**'
 
   deploy-api-gateway:
     name: api-gateway -> CI/CD (if changed)
@@ -162,3 +182,81 @@ jobs:
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
           heroku_app_name: "medvisual-diseases"
           appdir: "apps/diseases"
+
+  deploy-users:
+    name: users -> CI/CD (if changed)
+    runs-on: ubuntu-latest
+    needs: check-for-changes
+    if: needs.check-for-changes.outputs.users_changed == 'true'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Copy libs folder and corresponding configs so that they are included in the deployment
+      - name: Bundle
+        run: |
+            cp -r libs apps/users/libs
+            cp deploy/users/configs/* apps/users
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: "npm"
+      
+      - name: Install packages
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
+        
+      - name: Build
+        run: npm --prefix ./apps/users run build
+
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.13.15
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          heroku_app_name: "medvisual-users"
+          appdir: "apps/users"
+  
+  deploy-auth:
+    name: auth -> CI/CD (if changed)
+    runs-on: ubuntu-latest
+    needs: check-for-changes
+    if: needs.check-for-changes.outputs.auth_changed == 'true'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Copy libs folder and corresponding configs so that they are included in the deployment
+      - name: Bundle
+        run: |
+            cp -r libs apps/auth/libs
+            cp deploy/auth/configs/* apps/auth
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: "npm"
+      
+      - name: Install packages
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
+        
+      - name: Build
+        run: npm --prefix ./apps/auth run build
+
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.13.15
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          heroku_app_name: "medvisual-auth"
+          appdir: "apps/auth"

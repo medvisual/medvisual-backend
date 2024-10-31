@@ -1,1 +1,1 @@
-export const DISEASES_CLIENT = Symbol("DISEASES_CLIENT");
+export const DISEASES_CLIENT_NAME = Symbol("DISEASES_CLIENT");

@@ -16,14 +16,14 @@ import { Disease } from "./diseases/entities/disease.entity";
                 NODE_ENV: Joi.string()
                     .valid("development", "production")
                     .default("development"),
-                RMQ_URL: Joi.string().uri().required(),
+                RMQ_URL: Joi.string().uri(),
                 RMQ_QUEUE: Joi.string().required(),
                 DATABASE_URL: Joi.string().uri(),
                 DATABASE_HOST: Joi.string().hostname().default("postgres"),
                 DATABASE_PORT: Joi.number().port().default(5432),
-                DATABASE_USERNAME: Joi.string().required(),
-                DATABASE_PASSWORD: Joi.string().required(),
-                DATABASE_NAME: Joi.string().required()
+                DATABASE_USERNAME: Joi.string(),
+                DATABASE_PASSWORD: Joi.string(),
+                DATABASE_NAME: Joi.string()
             }),
             validationOptions: {
                 allowUnknown: true,

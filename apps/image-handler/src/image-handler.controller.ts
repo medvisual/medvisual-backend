@@ -8,13 +8,12 @@ import {
     ImageUploadDto
 } from "@medvisual/contracts/image-handler";
 import { IMAGE_HANDLER_PATTERNS } from "@medvisual/contracts/image-handler";
-import { ResponseValidationInterceptor } from "@medvisual/common";
+import { ResponseValidationInterceptor } from "@medvisual/common/interceptors";
 
 @Controller()
 export class ImageHandlerController {
     constructor(private readonly imageHandlerService: ImageHandlerService) {}
 
-    // As for now, response valdation is needed only at the very output (ResponseValidationInterceptor in api-gateway)
     @MessagePattern(IMAGE_HANDLER_PATTERNS.HANDLE_IMAGE)
     @UseInterceptors(new ResponseValidationInterceptor(GeminiVerdictDto))
     handleImage(@Payload() imageUploadDto: ImageUploadDto) {

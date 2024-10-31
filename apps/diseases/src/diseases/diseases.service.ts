@@ -1,8 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { CreateDiseaseDto } from "@medvisual/contracts/diseases";
-import { UpdateDiseaseDto } from "@medvisual/contracts/diseases";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
+import { RpcException } from "@nestjs/microservices";
+
+import { CreateDiseaseDto } from "@medvisual/contracts/diseases";
+import { UpdateDiseaseDto } from "@medvisual/contracts/diseases";
 import { Disease } from "./entities/disease.entity";
 
 @Injectable()
@@ -12,12 +14,12 @@ export class DiseasesService {
         private readonly diseaseRepository: Repository<Disease>
     ) {}
 
-    async create(createDiseaseDto: CreateDiseaseDto) {
+    create(createDiseaseDto: CreateDiseaseDto) {
         const disease = this.diseaseRepository.create(createDiseaseDto);
-        return await this.diseaseRepository.save(disease);
+        return this.diseaseRepository.save(disease);
     }
 
-    findAll(): Promise<Disease[]> {
+    findAll() {
         return this.diseaseRepository.find();
     }
 
@@ -25,11 +27,23 @@ export class DiseasesService {
         return this.diseaseRepository.findOneBy({ id });
     }
 
-    update(id: number, updateDiseaseDto: UpdateDiseaseDto) {
-        return this.diseaseRepository.update(id, updateDiseaseDto);
+    async update(id: number, updateDiseaseDto: UpdateDiseaseDto) {
+        // Id is a primary key, so it won't be updated anyway
+        const result = await this.diseaseRepository.update(
+            id,
+            updateDiseaseDto
+        );
+        if (result.affected === 0) {
+            throw new RpcException("Disease not found");
+        }
+
+        return this.findOne(id);
     }
 
-    remove(id: number) {
-        return this.diseaseRepository.delete(id);
+    async remove(id: number) {
+        const result = await this.diseaseRepository.delete(id);
+        if (result.affected === 0) {
+            throw new RpcException("Disease not found");
+        }
     }
 }

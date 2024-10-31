@@ -18,25 +18,25 @@ export class DiseasesController {
     }
 
     @MessagePattern(DISEASES_PATTERNS.FIND_ALL)
-    async findAll() {
-        return await this.diseasesService.findAll();
+    findAll() {
+        return this.diseasesService.findAll();
     }
 
     @MessagePattern(DISEASES_PATTERNS.FIND_ONE)
-    async findOne(@Payload() id: number) {
-        return await this.diseasesService.findOne(id);
+    findOne(@Payload() id: number) {
+        return this.diseasesService.findOne(id);
     }
 
     @MessagePattern(DISEASES_PATTERNS.UPDATE)
-    async update(@Payload() updateDiseaseDto: UpdateDiseaseDto) {
-        return await this.diseasesService.update(
+    update(@Payload() updateDiseaseDto: UpdateDiseaseDto) {
+        return this.diseasesService.update(
             updateDiseaseDto.id,
             updateDiseaseDto
         );
     }
 
     @MessagePattern(DISEASES_PATTERNS.REMOVE)
-    async remove(@Payload() id: number) {
-        return await this.diseasesService.remove(id);
+    remove(@Payload() id: number) {
+        return this.diseasesService.remove(id);
     }
 }
