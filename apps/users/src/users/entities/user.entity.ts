@@ -30,6 +30,7 @@ export class User {
      * Refresh JWT
      */
     @Column({
+        name: "refresh_token",
         nullable: true
         /* select: false */
     })
