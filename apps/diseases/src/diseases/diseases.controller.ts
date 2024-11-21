@@ -18,7 +18,7 @@ export class DiseasesController {
         return this.diseasesService.create(createDiseaseDto);
     }
 
-    // Probably will remain for testing purposes
+    // Deprecated
     @MessagePattern(DISEASES_PATTERNS.FIND_ALL)
     findAll() {
         return this.diseasesService.findAll();
