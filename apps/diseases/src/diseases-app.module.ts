@@ -5,7 +5,7 @@ import * as Joi from "joi";
 
 import config from "./config/configuration";
 import { DiseasesModule } from "./diseases/diseases.module";
-import { Disease } from "./diseases/entities/disease.entity";
+import { DiseaseEntity } from "./diseases/entities/disease.entity";
 
 @Module({
     imports: [
@@ -42,7 +42,7 @@ import { Disease } from "./diseases/entities/disease.entity";
                         ssl: {
                             rejectUnauthorized: false
                         },
-                        entities: [Disease],
+                        entities: [DiseaseEntity],
                         synchronize: false
                     };
                 } else {
@@ -55,7 +55,7 @@ import { Disease } from "./diseases/entities/disease.entity";
                         password:
                             configService.get<string>("database.password"),
                         database: configService.get<string>("database.name"),
-                        entities: [Disease],
+                        entities: [DiseaseEntity],
                         synchronize: true
                     };
                 }

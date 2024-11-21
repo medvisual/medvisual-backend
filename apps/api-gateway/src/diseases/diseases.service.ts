@@ -5,10 +5,13 @@ import { DISEASES_CLIENT_NAME } from "./constants/constants";
 import {
     DISEASES_PATTERNS,
     CreateDiseaseDto as ClientCreateDiseaseDto,
+    GetDiseasesDto as ClientGetDiseasesDto,
     UpdateDiseaseDto as ClientUpdateDiseaseDto,
     DiseaseDto as ClientDiseaseDto
 } from "@medvisual/contracts/diseases";
 import { UpdateDiseaseDto } from "./dto/update-disease.dto";
+import { DiseaseDto } from "./dto/disease.dto";
+import { PageOptionsDto } from "@medvisual/common/database";
 
 @Injectable()
 export class DiseasesService {
@@ -24,7 +27,17 @@ export class DiseasesService {
         >(DISEASES_PATTERNS.CREATE, createDiseaseDto);
     }
 
-    getDiseases() {
+    getManyDiseases(where?: Partial<DiseaseDto>, pagination?: PageOptionsDto) {
+        return this.diseasesClient.send<
+            ClientDiseaseDto[],
+            ClientGetDiseasesDto
+        >(DISEASES_PATTERNS.FIND_MANY, {
+            where,
+            pagination
+        });
+    }
+
+    getAllDiseases() {
         return this.diseasesClient.send<ClientDiseaseDto[]>(
             DISEASES_PATTERNS.FIND_ALL,
             {}

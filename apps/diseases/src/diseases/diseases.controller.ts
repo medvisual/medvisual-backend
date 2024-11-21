@@ -5,6 +5,7 @@ import { DiseasesService } from "./diseases.service";
 import {
     CreateDiseaseDto,
     UpdateDiseaseDto,
+    GetDiseasesDto,
     DISEASES_PATTERNS
 } from "@medvisual/contracts/diseases";
 
@@ -17,6 +18,7 @@ export class DiseasesController {
         return this.diseasesService.create(createDiseaseDto);
     }
 
+    // Probably will remain for testing purposes
     @MessagePattern(DISEASES_PATTERNS.FIND_ALL)
     findAll() {
         return this.diseasesService.findAll();
@@ -25,6 +27,14 @@ export class DiseasesController {
     @MessagePattern(DISEASES_PATTERNS.FIND_ONE)
     findOne(@Payload() id: number) {
         return this.diseasesService.findOne(id);
+    }
+
+    @MessagePattern(DISEASES_PATTERNS.FIND_MANY)
+    findAllPaginated(@Payload() findDiseasesDto: GetDiseasesDto) {
+        return this.diseasesService.findAllPaginated(
+            findDiseasesDto.where,
+            findDiseasesDto.pagination
+        );
     }
 
     @MessagePattern(DISEASES_PATTERNS.UPDATE)

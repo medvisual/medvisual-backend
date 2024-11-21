@@ -1,6 +1,9 @@
+import { PartialType } from "@nestjs/mapped-types";
 import { IsString } from "class-validator";
 
-export class CreateDiseaseDto {
+import { DiseaseDto } from "./disease.dto";
+
+export class CreateDiseaseDto extends PartialType(DiseaseDto) {
     /**
      * Name of the disease
      */
@@ -11,7 +14,7 @@ export class CreateDiseaseDto {
      * Description of the disease
      */
     @IsString()
-    description: string;
+    description?: string;
 
     /**
      * Department responsible for the disease

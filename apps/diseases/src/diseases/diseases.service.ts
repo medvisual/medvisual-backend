@@ -5,14 +5,18 @@ import { RpcException } from "@nestjs/microservices";
 
 import { CreateDiseaseDto } from "@medvisual/contracts/diseases";
 import { UpdateDiseaseDto } from "@medvisual/contracts/diseases";
-import { Disease } from "./entities/disease.entity";
+import { DiseaseEntity } from "./entities/disease.entity";
+import { PaginationService } from "@medvisual/common/database";
+import { PageOptionsDto } from "@medvisual/common/database";
 
 @Injectable()
-export class DiseasesService {
+export class DiseasesService extends PaginationService {
     constructor(
-        @InjectRepository(Disease)
-        private readonly diseaseRepository: Repository<Disease>
-    ) {}
+        @InjectRepository(DiseaseEntity)
+        private readonly diseaseRepository: Repository<DiseaseEntity>
+    ) {
+        super();
+    }
 
     create(createDiseaseDto: CreateDiseaseDto) {
         const disease = this.diseaseRepository.create(createDiseaseDto);
@@ -23,8 +27,19 @@ export class DiseasesService {
         return this.diseaseRepository.find();
     }
 
-    findOne(id: number): Promise<Disease | null> {
+    findOne(id: number): Promise<DiseaseEntity | null> {
         return this.diseaseRepository.findOneBy({ id });
+    }
+
+    async findAllPaginated(
+        where?: Partial<DiseaseEntity>,
+        pageOptions?: PageOptionsDto
+    ) {
+        return await this.paginate<DiseaseEntity>(
+            this.diseaseRepository,
+            pageOptions,
+            where
+        );
     }
 
     async update(id: number, updateDiseaseDto: UpdateDiseaseDto) {

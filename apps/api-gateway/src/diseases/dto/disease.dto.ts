@@ -1,6 +1,12 @@
-import { IsString } from "class-validator";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class DiseaseDto {
+    /**
+     * Id of the disease
+     */
+    @IsNumber()
+    id: number;
+
     /**
      * Name of the disease
      */
@@ -11,7 +17,8 @@ export class DiseaseDto {
      * Description of the disease
      */
     @IsString()
-    description: string;
+    @IsOptional()
+    description?: string;
 
     /**
      * Department responsible for the disease

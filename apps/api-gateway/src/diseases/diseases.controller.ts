@@ -11,6 +11,7 @@ import {
 import { DiseasesService } from "./diseases.service";
 import { CreateDiseaseDto } from "./dto/create-disease.dto";
 import { UpdateDiseaseDto } from "./dto/update-disease.dto";
+import { GetDiseasesDto } from "./dto/get-diseases.dto";
 
 @Controller("/api/diseases")
 export class DiseasesController {
@@ -21,9 +22,21 @@ export class DiseasesController {
         return this.diseasesService.createDisease(createDiseaseDto);
     }
 
+    // Post request is used to avoid parsing complex query string
+    @Post("/get")
+    getManyDiseases(@Body() getDiseasesDto: GetDiseasesDto) {
+        console.log(getDiseasesDto);
+
+        return this.diseasesService.getManyDiseases(
+            getDiseasesDto.where,
+            getDiseasesDto.pagination
+        );
+    }
+
+    // For debug purposes
     @Get()
-    getDiseases() {
-        return this.diseasesService.getDiseases();
+    getAllDiseases() {
+        return this.diseasesService.getAllDiseases();
     }
 
     @Get("/:id")
