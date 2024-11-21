@@ -52,7 +52,7 @@ describe("DiseasesService", () => {
     });
 
     describe("findAll", () => {
-        it("should return an array of diseases", async () => {
+        it("should return an array of all diseases", async () => {
             const diseases: DiseaseDto[] = [
                 {
                     id: 1,
