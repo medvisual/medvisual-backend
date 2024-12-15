@@ -1,0 +1,11 @@
+node_modules
+.git
+.github
+.gitignore
+*.md
+dist
+coverage
+deploy
+images
+reqs
+.env
