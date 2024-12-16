@@ -1,18 +1,19 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ClientProxy, RpcException } from "@nestjs/microservices";
 import * as bcrypt from "bcryptjs";
-import { JwtService, JwtSignOptions } from "@nestjs/jwt";
+import { JwtService } from "@nestjs/jwt";
 import { lastValueFrom } from "rxjs";
 import { ConfigService } from "@nestjs/config";
 
-import { USERS_CLIENT_NAME } from "./constants/constants";
+import { USERS_CLIENT_NAME } from "../constants/constants";
 import {
-    UpdateUserDto as ClientUpdateUserDto,
     UserDto as ClientUserDto,
+    CreateUserDto as ClientCreateUserDto,
     FindOneUserDto as ClientFindOneUserDto,
     USERS_PATTERNS
 } from "@medvisual/contracts/users";
-import { ITokenPayload } from "@medvisual/contracts/auth";
+import { TokenPairDto, TokenPayload } from "@medvisual/contracts/auth";
+import { SignUpDto } from "@medvisual/contracts/auth/dto/sign-up.dto";
 
 @Injectable()
 export class AuthService {
@@ -23,7 +24,7 @@ export class AuthService {
         private readonly configService: ConfigService
     ) {}
 
-    async validateUser(
+    async validateUserCredentials(
         email: string,
         password: string
     ): Promise<ClientUserDto> {
@@ -46,49 +47,32 @@ export class AuthService {
         return user;
     }
 
-    async generateAuth(tokenPayload: ITokenPayload) {
-        const accessToken = this.issueToken(tokenPayload, {
-            secret: this.configService.getOrThrow<string>("jwt.access.secret"),
-            expiresIn: this.configService.getOrThrow<string>(
-                "jwt.access.expiresInSeconds"
+    async signUp(signUpDto: SignUpDto): Promise<ClientUserDto> {
+        const { password, ...data } = signUpDto;
+        const createUserDto: ClientCreateUserDto = {
+            password: await bcrypt.hash(password, 10),
+            ...data
+        };
+
+        return await lastValueFrom(
+            this.usersClient.send<ClientUserDto, ClientCreateUserDto>(
+                USERS_PATTERNS.CREATE,
+                createUserDto
             )
-        });
-        const refreshToken = this.issueToken(tokenPayload, {
+        );
+    }
+
+    async generateTokens(tokenPayload: TokenPayload): Promise<TokenPairDto> {
+        // Default configuration from the module is used for the access token
+        const accessToken = this.jwtService.sign(tokenPayload);
+        const refreshToken = this.jwtService.sign(tokenPayload, {
             secret: this.configService.getOrThrow<string>("jwt.refresh.secret"),
             expiresIn: this.configService.getOrThrow<string>(
                 "jwt.refresh.expiresInSeconds"
             )
         });
 
-        // TODO: Implement token rotation
-        await lastValueFrom(
-            this.usersClient.send<ClientUserDto, ClientUpdateUserDto>(
-                USERS_PATTERNS.UPDATE,
-                {
-                    id: tokenPayload.userId,
-                    refreshToken
-                }
-            )
-        );
-
         return { accessToken, refreshToken };
-    }
-
-    async validateRefreshToken(
-        refreshToken: string,
-        tokenPayload: ITokenPayload
-    ) {
-        const user = await this.getUserBy({ id: tokenPayload.userId });
-
-        // TODO: Implement token rotation
-        return refreshToken === user.refreshToken;
-    }
-
-    private issueToken(
-        tokenPayload: ITokenPayload,
-        signOptions?: JwtSignOptions
-    ) {
-        return this.jwtService.sign(tokenPayload, signOptions);
     }
 
     private async getUserBy(

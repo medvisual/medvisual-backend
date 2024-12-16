@@ -3,11 +3,10 @@ import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-jwt";
 import { ExtractJwt } from "passport-jwt";
 import { ConfigService } from "@nestjs/config";
-import { Request } from "express";
 
-import { AuthService } from "../auth.service";
 import { UsersService } from "../../users/users.service";
-import { ITokenPayload } from "@medvisual/contracts/auth";
+import { TokenPayload } from "@medvisual/contracts/auth";
+import { Request } from "express";
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(
@@ -16,7 +15,6 @@ export class JwtRefreshStrategy extends PassportStrategy(
 ) {
     constructor(
         configService: ConfigService,
-        private readonly authService: AuthService,
         private readonly usersService: UsersService
     ) {
         super({
@@ -27,20 +25,23 @@ export class JwtRefreshStrategy extends PassportStrategy(
         });
     }
 
-    async validate(request: Request, tokenPayload: ITokenPayload) {
+    async validate(request: Request, tokenPayload: TokenPayload) {
         try {
+            const user = await this.usersService.getUser(tokenPayload.sub);
             const refreshToken = this.extractTokenFromHeader(request);
-            const isValid = await this.authService.validateRefresh(
-                refreshToken,
-                tokenPayload
-            );
-            if (!isValid) {
-                throw new UnauthorizedException("Refresh token is not valid");
+            if (!refreshToken) {
+                throw new UnauthorizedException();
             }
 
-            return await this.usersService.getUser(tokenPayload.userId);
+            return [
+                user,
+                {
+                    refreshToken,
+                    refreshTokenExpiresAt: new Date(tokenPayload.exp * 1000)
+                }
+            ];
         } catch (error) {
-            throw new UnauthorizedException("Failed to refresh auth");
+            throw new UnauthorizedException();
         }
     }
 

@@ -5,7 +5,8 @@ import {
     Get,
     Param,
     Patch,
-    Post
+    Post,
+    Query
 } from "@nestjs/common";
 
 import { DiseasesService } from "./diseases.service";
@@ -13,7 +14,7 @@ import { CreateDiseaseDto } from "./dto/create-disease.dto";
 import { UpdateDiseaseDto } from "./dto/update-disease.dto";
 import { GetDiseasesDto } from "./dto/get-diseases.dto";
 
-@Controller("/api/diseases")
+@Controller("diseases")
 export class DiseasesController {
     constructor(private readonly diseasesService: DiseasesService) {}
 
@@ -22,11 +23,8 @@ export class DiseasesController {
         return this.diseasesService.createDisease(createDiseaseDto);
     }
 
-    // Post request is used to avoid parsing complex query string
-    @Post("/get")
-    getManyDiseases(@Body() getDiseasesDto: GetDiseasesDto) {
-        console.log(getDiseasesDto);
-
+    @Get()
+    getManyDiseases(@Query() getDiseasesDto: GetDiseasesDto) {
         return this.diseasesService.getManyDiseases(
             getDiseasesDto.where,
             getDiseasesDto.pagination
@@ -34,7 +32,7 @@ export class DiseasesController {
     }
 
     // For debug purposes
-    @Get()
+    @Get("/all")
     getAllDiseases() {
         return this.diseasesService.getAllDiseases();
     }

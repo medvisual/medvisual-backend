@@ -6,11 +6,14 @@ import {
     AUTH_PATTERNS,
     ValidateUserDto as ClientValidateUserDto,
     UserDto as ClientUserDto,
+    TokenPairDto as ClientTokenPairDto,
     SignInDto as ClientSignInDto,
-    RefreshAuthDto as ClientRefreshAuthDto
+    RefreshDto as ClientRefreshDto,
+    SignUpDto as ClientSignUpDto,
+    SafeUserDto as ClientSafeUserDto
 } from "@medvisual/contracts/auth";
 import { lastValueFrom } from "rxjs";
-import { ITokenPayload } from "./interfaces/token-payload.interface";
+import { TokenPayload } from "./interfaces/token-payload.interface";
 
 @Injectable()
 export class AuthService {
@@ -19,12 +22,9 @@ export class AuthService {
         private readonly authClient: ClientProxy
     ) {}
 
-    async validateUser(
-        email: string,
-        password: string
-    ): Promise<ClientUserDto> {
+    validateUser(email: string, password: string): Promise<ClientUserDto> {
         try {
-            return await lastValueFrom(
+            return lastValueFrom(
                 this.authClient.send<ClientUserDto, ClientValidateUserDto>(
                     AUTH_PATTERNS.VALIDATE_USER,
                     { email, password }
@@ -35,21 +35,40 @@ export class AuthService {
         }
     }
 
-    async signIn(user: { id: number }) {
-        return await lastValueFrom(
-            this.authClient.send<ClientUserDto, ClientSignInDto>(
-                AUTH_PATTERNS.SIGN_IN,
-                { userId: user.id }
+    signUp(signUpDto: ClientSignUpDto) {
+        return lastValueFrom(
+            this.authClient.send<ClientSafeUserDto, ClientSignUpDto>(
+                AUTH_PATTERNS.SIGN_UP,
+                signUpDto
             )
         );
     }
 
-    async validateRefresh(refreshToken: string, tokenPayload: ITokenPayload) {
-        return await lastValueFrom(
-            this.authClient.send<boolean, ClientRefreshAuthDto>(
-                AUTH_PATTERNS.VALIDATE_REFRESH,
-                { refreshToken, tokenPayload }
+    signIn(tokenPayload: TokenPayload) {
+        return lastValueFrom(
+            this.authClient.send<ClientTokenPairDto, ClientSignInDto>(
+                AUTH_PATTERNS.SIGN_IN,
+                { tokenPayload }
             )
         );
+    }
+
+    async refresh(
+        refreshToken: string,
+        tokenPayload: TokenPayload,
+        tokenExpiresAt: Date
+    ) {
+        try {
+            const tokenPair = await lastValueFrom(
+                this.authClient.send<ClientTokenPairDto, ClientRefreshDto>(
+                    AUTH_PATTERNS.REFRESH,
+                    { refreshToken, tokenPayload, tokenExpiresAt }
+                )
+            );
+
+            return tokenPair;
+        } catch (error) {
+            throw new UnauthorizedException();
+        }
     }
 }

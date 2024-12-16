@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { DeepPartial, FindOptionsWhere, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { RpcException } from "@nestjs/microservices";
-import * as bcrypt from "bcryptjs";
 
 import { CreateUserDto } from "@medvisual/contracts/users";
 import { User } from "./entities/user.entity";
@@ -15,11 +14,11 @@ export class UsersService {
     ) {}
 
     async create(createUserDto: CreateUserDto): Promise<User> {
-        const { password, ...data } = createUserDto;
-        const user = this.userRepository.create(data);
-        user.password = await bcrypt.hash(password, 10);
+        //const { password, ...data } = createUserDto;
+        //const user = this.userRepository.create(data);
+        //user.password = await bcrypt.hash(password, 10);
 
-        return this.userRepository.save(user);
+        return this.userRepository.save(createUserDto);
     }
 
     findAll() {
@@ -28,7 +27,6 @@ export class UsersService {
 
     findOne(options: FindOptionsWhere<User>): Promise<User> {
         try {
-            console.log(options);
             return this.userRepository.findOneByOrFail(options);
         } catch (error) {
             throw new RpcException("User not found");

@@ -11,21 +11,22 @@ import { Express } from "express";
 
 import { ImageHandlerService } from "./image-handler.service";
 import { DiseasesInfoDto } from "./dto/diseases-info.dto";
-import { ResponseValidationInterceptor } from "@medvisual/common/interceptors";
-import { ImageVerdictsDto } from "./dto/image-verdicts.dto";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
+import { ApiBody, ApiConsumes, ApiResponse } from "@nestjs/swagger";
+import { ImageVerdictsDto } from "./dto/image-verdicts.dto";
 
-@Controller("/api/visual")
+@Controller("visual")
 export class ImageHandlerController {
     constructor(private readonly imageHandlerService: ImageHandlerService) {}
 
     @Post("/create")
+    @ApiConsumes("multipart/form-data")
+    @ApiBody({
+        type: "multipart/formdata"
+    })
+    @ApiResponse({ type: ImageVerdictsDto })
     @UseGuards(JwtAuthGuard)
-    @UseInterceptors(
-        FileInterceptor("image"),
-        // No specific transformations are needed right now, this should work just fine
-        new ResponseValidationInterceptor(ImageVerdictsDto)
-    )
+    @UseInterceptors(FileInterceptor("image"))
     analyzeImage(
         @UploadedFile() imageData: Express.Multer.File,
         @Body() diseasesInfoDto: DiseasesInfoDto

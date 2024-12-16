@@ -1,34 +1,48 @@
 import {
     Body,
+    ClassSerializerInterceptor,
     Controller,
     Delete,
     Get,
     Param,
     Patch,
-    Post
+    Post,
+    UseInterceptors
 } from "@nestjs/common";
 
 import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { SafeUserDto } from "./dto/safe-user.dto";
+import { plainToInstance } from "class-transformer";
+import { lastValueFrom } from "rxjs";
 
-@Controller("/api/users")
+@Controller("users")
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
     @Post()
-    createUser(@Body() createUserDto: CreateUserDto) {
-        return this.usersService.createUser(createUserDto);
+    async createUser(@Body() createUserDto: CreateUserDto) {
+        const user = await this.usersService.createUser(createUserDto);
+
+        return plainToInstance(SafeUserDto, user);
     }
 
-    @Get()
-    getUsers() {
-        return this.usersService.getUsers();
+    // For debug purposes
+    @Get("/all")
+    @UseInterceptors(ClassSerializerInterceptor)
+    async getAllUsers() {
+        const users = await lastValueFrom(this.usersService.getAllUsers());
+
+        return plainToInstance(SafeUserDto, users);
     }
 
     @Get("/:id")
-    getUser(@Param("id") id: number) {
-        return this.usersService.getUser(id);
+    @UseInterceptors(ClassSerializerInterceptor)
+    async getUser(@Param("id") id: number): Promise<SafeUserDto> {
+        const user = await this.usersService.getUser(id);
+
+        return plainToInstance(SafeUserDto, user);
     }
 
     @Patch("/:id")

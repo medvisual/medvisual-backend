@@ -1,23 +1,5 @@
-import { PartialType } from "@nestjs/mapped-types";
-import { IsString } from "class-validator";
+import { OmitType } from "@nestjs/swagger";
+
 import { DiseaseDto } from "./disease.dto";
 
-export class CreateDiseaseDto extends PartialType(DiseaseDto) {
-    /**
-     * Name of the disease
-     */
-    @IsString()
-    name: string;
-
-    /**
-     * Description of the disease
-     */
-    @IsString()
-    description: string;
-
-    /**
-     * Department responsible for the disease
-     */
-    @IsString()
-    department: string;
-}
+export class CreateDiseaseDto extends OmitType(DiseaseDto, ["id"] as const) {}

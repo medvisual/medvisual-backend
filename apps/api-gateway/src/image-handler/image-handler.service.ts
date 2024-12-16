@@ -17,10 +17,7 @@ export class ImageHandlerService {
         private readonly imageHandlerClient: ClientProxy
     ) {}
 
-    async analyzeImage(
-        imageData: Express.Multer.File,
-        presumedDiseases: string[]
-    ) {
+    analyzeImage(imageData: Express.Multer.File, presumedDiseases: string[]) {
         consola.info(`Presumed diseases: ${presumedDiseases.join(", ")}`);
 
         // File is read because unable to get buffer from the multer file in this context

@@ -1,3 +1,5 @@
-export interface ITokenPayload {
-    userId: number;
+export interface TokenPayload {
+    sub: number;
+    iat?: number;
+    exp?: number;
 }

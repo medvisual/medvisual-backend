@@ -28,7 +28,7 @@ export class UsersService {
         );
     }
 
-    getUsers() {
+    getAllUsers() {
         return this.usersClient.send<ClientUserDto[]>(
             USERS_PATTERNS.FIND_ALL,
             {}

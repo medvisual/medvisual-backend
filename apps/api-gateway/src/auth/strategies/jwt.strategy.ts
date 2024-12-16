@@ -5,7 +5,7 @@ import { ExtractJwt } from "passport-jwt";
 import { ConfigService } from "@nestjs/config";
 
 import { UsersService } from "../../users/users.service";
-import { ITokenPayload } from "@medvisual/contracts/auth";
+import { TokenPayload } from "@medvisual/contracts/auth";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -20,9 +20,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         });
     }
 
-    async validate(tokenPayload: ITokenPayload) {
+    validate(tokenPayload: TokenPayload) {
         try {
-            return await this.usersSerivce.getUser(tokenPayload.userId);
+            return this.usersSerivce.getUser(tokenPayload.sub);
         } catch (error) {
             throw new UnauthorizedException("User not found");
         }

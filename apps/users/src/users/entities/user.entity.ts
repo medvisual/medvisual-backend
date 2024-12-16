@@ -1,7 +1,10 @@
+import { AbstractEntity } from "@medvisual/common/database";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
-export class User {
+@Entity({
+    name: "users"
+})
+export class User extends AbstractEntity {
     /**
      * Id of the user (primary key)
      */
@@ -25,14 +28,4 @@ export class User {
      */
     @Column(/*{ select: false }*/)
     password: string;
-
-    /**
-     * Refresh JWT
-     */
-    @Column({
-        name: "refresh_token",
-        nullable: true
-        /* select: false */
-    })
-    refreshToken: string;
 }

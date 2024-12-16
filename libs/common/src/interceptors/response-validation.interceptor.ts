@@ -27,12 +27,13 @@ export class ResponseValidationInterceptor<T extends object>
 
                 const errors = await validate(transformedData);
                 if (errors.length > 0) {
-                    if (context.getType() === "http") {
+                    const contextType = context.getType();
+                    if (contextType === "http") {
                         throw new InternalServerErrorException({
                             message: "Intercepted response validation failed",
                             errors
                         });
-                    } else if (context.getType() === "rpc") {
+                    } else if (contextType === "rpc") {
                         throw new RpcException({
                             message: "Intercepted response validation failed",
                             errors

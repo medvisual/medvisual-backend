@@ -1,10 +1,8 @@
-import { IsNumber } from "class-validator";
-import { ITokenPayload } from "../interfaces/token-payload.interface";
+import { IsNotEmptyObject } from "class-validator";
 
-export class SignInDto implements ITokenPayload {
-    /**
-     * User id from the token payload
-     */
-    @IsNumber()
-    userId: number;
+import { TokenPayload } from "../interfaces/token-payload.interface";
+
+export class SignInDto {
+    @IsNotEmptyObject()
+    tokenPayload: TokenPayload;
 }

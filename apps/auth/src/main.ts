@@ -1,17 +1,21 @@
 import { NestFactory } from "@nestjs/core";
 import { ValidationPipe } from "@nestjs/common";
-import { MicroserviceOptions, Transport } from "@nestjs/microservices";
+import {
+    MicroserviceOptions,
+    RpcException,
+    Transport
+} from "@nestjs/microservices";
 
-import { AuthModule } from "./auth.module";
+import { AuthAppModule } from "./auth-app.module";
 
 async function bootstrap() {
-    const isProduction: boolean = process.env.NODE_ENV === "production";
+    const isProduction = process.env.NODE_ENV === "production";
     const rmqUrl = isProduction
         ? process.env.CLOUDAMQP_URL
         : process.env.RMQ_URL || "rabbitmq";
 
     const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-        AuthModule,
+        AuthAppModule,
         {
             transport: Transport.RMQ,
             options: {
@@ -25,7 +29,14 @@ async function bootstrap() {
     );
     app.useGlobalPipes(
         new ValidationPipe({
-            transform: true
+            transform: true,
+            whitelist: true,
+            forbidNonWhitelisted: true,
+            exceptionFactory: (errors) => {
+                return new RpcException(
+                    errors.map((error) => error.constraints)
+                );
+            }
         })
     );
 
